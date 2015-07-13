@@ -21,6 +21,8 @@ $(function() {
 		 * allFeeds in app.js to be an empty array and refresh the
 		 * page?
 		 */
+		var len = allFeeds.length;
+
 		it('are defined', function() {
 			expect(allFeeds).toBeDefined();
 			expect(allFeeds.length).not.toBe(0);
@@ -31,8 +33,6 @@ $(function() {
 		 * and that the URL is not empty.
 		 */
 		it('urls are defined and not empty', function() {
-			var len = allFeeds.length;
-
 			for(i=0; i<len; i++) {
 				expect(allFeeds[i].url).toBeDefined();
 				expect(allFeeds[i].url).not.toBe('');
@@ -76,7 +76,7 @@ $(function() {
 		it('changes visibility when display is clicked', function() {			
 			// test that the click unhides the menu
 			$('.menu-icon-link').click();
-			expect($('body').attr('class')).toBe('');
+			expect($('body').attr('class')).not.toBe('menu-hidden');
 			// test that click hides the menu again
 			$('.menu-icon-link').click();
 			expect($('body').attr('class')).toBe('menu-hidden');
