@@ -60,7 +60,7 @@ $(function() {
 		* hiding/showing of the menu element.
 		*/
 		it('is hidden by default', function() {
-			expect($('body').attr('class')).toBe('menu-hidden');
+			expect($('body').hasClass('menu-hidden')).toBe(true);
 		});
 
 
@@ -70,11 +70,14 @@ $(function() {
 		* clicked and does it hide when clicked again.
 		*/
 		it('changes visibility when display is clicked', function() {
+			var menuIcon = $('.menu-icon-link');
+
 			// test that the click unhides the menu
-			$('.menu-icon-link').click();
+			menuIcon.click();
 			expect($('body').attr('class')).not.toBe('menu-hidden');
+
 			// test that click hides the menu again
-			$('.menu-icon-link').click();
+			menuIcon.click();
 			expect($('body').attr('class')).toBe('menu-hidden');
 		});
 	});
@@ -98,19 +101,28 @@ $(function() {
 	});
 
 	describe('New Feed Selection', function() {
-	
 		/* test that ensures when a new feed is loaded
 		 * by the loadFeed function that the content actually changes.
 		 * Remember, loadFeed() is asynchronous.
 		 */
-		var feed = $('.feed')[0].innerHTML;  // inner html
+		var feed;
 
 		beforeEach(function(done) {
-			loadFeed(0, loadFeed(1, done));
+			loadFeed(0, function() {
+				feed0 = $('.feed')[0].innerHTML;  // save the html of this feed
+
+				// load a different feed as part of the callback
+				loadFeed(1, function() {
+					feed1 = $('.feed')[0].innerHTML;  // save the html of this feed also
+
+					// finished with these nested callbacks
+					done();
+				});
+			});
 		});
 
 		it('loads changes', function(done) {
-			expect($('.feed')[0].innerHTML).not.toBe(feed);
+			expect(feed1).not.toBe(feed0);
 			done();
 		});
 	});
