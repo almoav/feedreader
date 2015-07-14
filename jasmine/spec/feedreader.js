@@ -1,13 +1,13 @@
 /* feedreader.js
- *
- * This is the spec file that Jasmine will read and contains
- * all of the tests that will be run against your application.
- */
+*
+* This is the spec file that Jasmine will read and contains
+* all of the tests that will be run against your application.
+*/
 
 /* We're placing all of our tests within the $() function,
- * since some of these tests may require DOM elements. We want
- * to ensure they don't run until the DOM is ready.
- */
+* since some of these tests may require DOM elements. We want
+* to ensure they don't run until the DOM is ready.
+*/
 $(function() {
 	/* This is our first test suite - a test suite just contains
 	* a related set of tests. This suite is all about the RSS
@@ -15,43 +15,39 @@ $(function() {
 	*/
 	describe('RSS Feeds', function() {
 		/* This is our first test - it tests to make sure that the
-		 * allFeeds variable has been defined and that it is not
-		 * empty. Experiment with this before you get started on
-		 * the rest of this project. What happens when you change
-		 * allFeeds in app.js to be an empty array and refresh the
-		 * page?
-		 */
-		var len = allFeeds.length;
-
+		* allFeeds variable has been defined and that it is not
+		* empty. Experiment with this before you get started on
+		* the rest of this project. What happens when you change
+		* allFeeds in app.js to be an empty array and refresh the
+		* page?
+		*/
 		it('are defined', function() {
 			expect(allFeeds).toBeDefined();
 			expect(allFeeds.length).not.toBe(0);
 		});
 
 		/* loops through each feed
-		 * in the allFeeds object and ensures it has a URL defined
-		 * and that the URL is not empty.
-		 */
+		* in the allFeeds object and ensures it has a URL defined
+		* and that the URL is not empty.
+		*/
 		it('urls are defined and not empty', function() {
-			for(i=0; i<len; i++) {
-				expect(allFeeds[i].url).toBeDefined();
-				expect(allFeeds[i].url).not.toBe('');
-				expect(allFeeds[i].url).not.toBeNull();
-			}
+			allFeeds.forEach(function(feed) {
+				expect(feed.url).toBeDefined();
+				expect(feed.url).not.toBe('');
+				expect(feed.url).not.toBeNull();
+			});
 		});
 
 		/* a test that loops through each feed
-		 * in the allFeeds object and ensures it has a name defined
-		 * and that the name is not empty.
-		 */
+		* in the allFeeds object and ensures it has a name defined
+		* and that the name is not empty.
+		*/
 		it('names are defined and not empty', function() {
-			var len = allFeeds.length;
-
-			for(i=0; i<len; i++) {
-				expect(allFeeds[i].name).toBeDefined();
-				expect(allFeeds[i].name).not.toBe('');
-				expect(allFeeds[i].name).not.toBeNull();
-			}
+			allFeeds.forEach(function(feed) {
+				expect(feed.name).toBeDefined();
+				expect(feed.name).not.toBe('');
+				expect(feed.name).not.toBeNull();
+			});
 		});
 
 	});
@@ -59,21 +55,21 @@ $(function() {
 	describe('The Menu', function() {
 
 		/* a test that ensures the menu element is
-		 * hidden by default. You'll have to analyze the HTML and
-		 * the CSS to determine how we're performing the
-		 * hiding/showing of the menu element.
-		 */
+		* hidden by default. You'll have to analyze the HTML and
+		* the CSS to determine how we're performing the
+		* hiding/showing of the menu element.
+		*/
 		it('is hidden by default', function() {
 			expect($('body').attr('class')).toBe('menu-hidden');
 		});
 
 
-		 /* a test that ensures the menu changes
-		  * visibility when the menu icon is clicked. This test
-		  * should have two expectations: does the menu display when
-		  * clicked and does it hide when clicked again.
-		  */
-		it('changes visibility when display is clicked', function() {			
+		/* a test that ensures the menu changes
+		* visibility when the menu icon is clicked. This test
+		* should have two expectations: does the menu display when
+		* clicked and does it hide when clicked again.
+		*/
+		it('changes visibility when display is clicked', function() {
 			// test that the click unhides the menu
 			$('.menu-icon-link').click();
 			expect($('body').attr('class')).not.toBe('menu-hidden');
@@ -92,9 +88,7 @@ $(function() {
 		 * the use of Jasmine's beforeEach and asynchronous done() function.
 		 */
 		beforeEach(function(done) {
-			loadFeed(0, function() {
-				done();
-			});
+			loadFeed(0, done);
 		});
 
 		it('has at least one entry', function(done) {
@@ -109,16 +103,14 @@ $(function() {
 		 * by the loadFeed function that the content actually changes.
 		 * Remember, loadFeed() is asynchronous.
 		 */
-		var feed = $('.feed');
+		var feed = $('.feed')[0].innerHTML;  // inner html
 
 		beforeEach(function(done) {
-			loadFeed(1, function() {
-				done();
-			});
+			loadFeed(0, loadFeed(1, done));
 		});
 
 		it('loads changes', function(done) {
-			expect($('.feed')).not.toBe(feed);
+			expect($('.feed')[0].innerHTML).not.toBe(feed);
 			done();
 		});
 	});
